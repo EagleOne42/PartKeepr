@@ -1,4 +1,5 @@
 language: php
+dist: trusty
 
 php:
     - 5.6
@@ -9,9 +10,13 @@ script:
     - vendor/bin/phpunit -c app/ --coverage-clover build/logs/clover.xml
 
 env:
-    - SYMFONY__TESTDB=mysql
-    - SYMFONY__TESTDB=pgsql
-    - SYMFONY__TESTDB=sqlite
+    - SYMFONY__TESTDB=mysql DB=mysql
+    - SYMFONY__TESTDB=pgsql DB=pgsql
+    - SYMFONY__TESTDB=sqlite DB=sqlite
+
+services:
+    - mysql
+    - postgresql
 
 matrix:
   exclude:
@@ -24,9 +29,6 @@ matrix:
 addons:
   code_climate:
     repo_token: 9bf99f3d5903f9f2ae2280f49cc469ef219bb965205cd324847f22d4698257d9
-
-before_install:
-  - echo "extension=ldap.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 before_script:
   - cp app/config/parameters.php.dist app/config/parameters.php
